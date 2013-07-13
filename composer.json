@@ -1,0 +1,29 @@
+{
+    "name": "rz/oauth-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony2 Bundle HWIOAuthBundle Extension",
+    "keywords": ["symfony2", "Sonata Project", "RZProject"],
+    "homepage": "https://github.com/rzproject/OAuthBundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "mell zamora",
+            "email": "mell@rzproject.org",
+            "homepage": "http://www.rzproject.org"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "rz/user-bundle": "2.3.*@dev",
+        "rmzamora/hwi-oauth-bundle": "0.3.*@dev"
+    },
+    "autoload": {
+        "psr-0": { "Rz\\UserBundle": "" }
+    },
+    "target-dir": "Rz/OAuthBundle",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.3.x-dev"
+        }
+    }
+}

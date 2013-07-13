@@ -1,0 +1,12 @@
+{% extends 'RzUserBundle:Security:login.html.twig' %}
+
+{% block action_buttons %}
+    {{ parent() }}
+    <div class="btn-group">
+        <a class="btn btn-primary" href="javascript:void(0);"><i class="icon-user icon-white"></i> Social Network</a>
+        <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li><a href="{{hwi_oauth_login_url('facebook')}}">Facebook</a></li>
+        </ul>
+    </div>
+{% endblock action_buttons %}
