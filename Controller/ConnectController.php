@@ -59,7 +59,7 @@ class ConnectController extends BaseConnectController
 //                $url = $this->container->get('router')->generate($route);
 //                $response = new RedirectResponse($url);
                 // Authenticate the user
-                $this->authenticateUser($form->getData(), $error->getResourceOwnerName(), $error->getRawToken());
+                $this->authenticateUser($request, $form->getData(), $error->getResourceOwnerName(), $error->getRawToken());
 
                 return $this->container->get('templating')->renderResponse('HWIOAuthBundle:Connect:registration_success.html.' . $this->getTemplatingEngine(), array(
                                                                                                                                                                  'userInformation' => $userInformation,
