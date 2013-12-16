@@ -23,7 +23,7 @@
     "target-dir": "Rz/OAuthBundle",
     "extra": {
         "branch-alias": {
-            "dev-2.3": "0.4.x-dev"
+            "dev-0.4": "0.4.x-dev"
         }
     }
 }
