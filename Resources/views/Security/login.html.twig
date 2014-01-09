@@ -2,13 +2,8 @@
 
 {% block action_buttons %}
     {{ parent() }}
-    <div class="btn-group">
-        <a class="btn btn-primary" href="javascript:void(0);"><i class="icon-user icon-white"></i> Social Network</a>
-        <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
-        <ul class="dropdown-menu">
-            <li><a href="{{hwi_oauth_login_url('facebook')}}">Facebook</a></li>
-            <li><a href="{{hwi_oauth_login_url('twitter')}}">Twitter</a></li>
-            <li><a href="{{hwi_oauth_login_url('google')}}">Google+</a></li>
-        </ul>
-    </div>
+    <p class="form_info_social">or Login Via Social Network</p>
+    <a class="btn btn-rzcms-theme btn-social btn-social-fb span12" href="{{hwi_oauth_login_url('facebook')}}"><i class="icon-facebook-sign"></i> Facebook</a>
+    <a class="btn btn-rzcms-theme btn-social btn-social-twitter span12" href="{{hwi_oauth_login_url('twitter')}}"><i class="icon-twitter-sign"></i> Twitter</a>
+    <a class="btn btn-rzcms-theme btn-social btn-social-google span12" href="{{hwi_oauth_login_url('google')}}"><i class="icon-google-plus-sign"></i> Google+</a>
 {% endblock action_buttons %}
