@@ -32,5 +32,22 @@ class RzOAuthExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('listeners.xml');
+
+        #TODO:save for future implentation
+        //$loader->load('registration.xml');
+        //$this->loadRegistrationSettings($config['registration'], $container);
+    }
+
+    /**
+     * @param array                                                   $config
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     *
+     * @return void
+     */
+    public function loadRegistrationSettings($config, ContainerBuilder $container)
+    {
+        $container->setParameter('rz_o_auth.registration.form.type', $config['form']['type']);
+        $container->setParameter('rz_o_auth.registration.form.name', $config['form']['name']);
+        $container->setParameter('rz_o_auth.registration.form.validation_groups', $config['form']['validation_groups']);
     }
 }
