@@ -15,7 +15,7 @@
     "minimum-stability": "dev",
     "require": {
         "rz/user-bundle": "~1.0",
-        "rmzamora/hwi-oauth-bundle": "0.4.*@dev"
+        "rmzamora/hwi-oauth-bundle": "~0.3"
     },
     "autoload": {
         "psr-0": { "Rz\\OAuthBundle": "" }
