@@ -18,9 +18,8 @@
         "rmzamora/hwi-oauth-bundle": "~0.3"
     },
     "autoload": {
-        "psr-0": { "Rz\\OAuthBundle": "" }
+        "psr-4": { "Rz\\OAuthBundle\\": "" }
     },
-    "target-dir": "Rz/OAuthBundle",
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"
