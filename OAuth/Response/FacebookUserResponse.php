@@ -53,13 +53,7 @@ class FacebookUserResponse extends PathUserResponse
      */
     public function getFacebookData()
     {
-        $data = $this->getValueForPath('facebookData');
-        if (!is_array($data)) {
-            $idx = $this->getPath('facebookData');
-            $data = array($idx=>$data);
-        }
-
-        return array_merge(array('accessToken'=>$this->getAccessToken()), $data);
+        return  json_encode($this->getJsonValueForPath('facebookData'));
     }
 
     /**
@@ -132,5 +126,62 @@ class FacebookUserResponse extends PathUserResponse
     public function getWebsite()
     {
         return $this->getValueForPath('website');
+    }
+
+    /**
+     * Extracts a value from the response for a given path.
+     *
+     * @param string $path Name of the path to get the value for
+     *
+     * @return null|string
+     */
+    protected function getJsonValueForPath($path)
+    {
+        $response = $this->response;
+        if (!$response) {
+            return null;
+        }
+
+        $steps = $this->getPath($path);
+        if (!$steps) {
+            return null;
+        }
+
+        if (is_array($steps)) {
+            if (1 === count($steps)) {
+                return $this->getValue(current($steps), $response);
+            }
+
+
+            $value = array();
+            foreach ($steps as $step) {
+                $value[$step] = $this->getValue($step, $response);
+            }
+
+            return $value ?: null;
+        }
+
+        return $this->getValue($steps, $response);
+    }
+
+    /**
+     * @param string $steps
+     * @param array  $response
+     *
+     * @return null|string
+     */
+    private function getValue($steps, array $response)
+    {
+        $value = $response;
+        $steps = explode('.', $steps);
+        foreach ($steps as $step) {
+            if (!array_key_exists($step, $value)) {
+                return null;
+            }
+
+            $value = $value[$step];
+        }
+
+        return $value;
     }
 }

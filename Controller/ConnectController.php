@@ -21,26 +21,28 @@ class ConnectController extends BaseConnectController
 {
     public function completeRegistrationAction(Request $request, $key)
     {
+        $connect = $this->container->getParameter('hwi_oauth.connect');
+        if (!$connect) {
+            throw new NotFoundHttpException();
+        }
+
         $hasUser = $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED');
+        if ($hasUser) {
+            throw new AccessDeniedException('Cannot connect already registered account.');
+        }
+
         $session = $request->getSession();
         $error = $session->get('_hwi_oauth.registration_error.'.$key);
         $session->remove('_hwi_oauth.registration_error.'.$key);
 
-        if ($hasUser || !($error instanceof AccountNotLinkedException) || (time() - $key > 800)) {
+        if (!($error instanceof AccountNotLinkedException) || (time() - $key > 300)) {
             // todo: fix this
             throw new \Exception('Cannot register an account.');
         }
 
-        /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
-        $userManager = $this->container->get('fos_user.user_manager');
-        $user = $userManager->createUser();
-        $user->setEnabled(true);
-        $form = $this->container->get('hwi_oauth.registration.form.factory')->createForm();
-        $form->setData($user);
-
         $userInformation = $this
-                           ->getResourceOwnerByName($error->getResourceOwnerName())
-                           ->getUserInformation($error->getRawToken())
+            ->getResourceOwnerByName($error->getResourceOwnerName())
+            ->getUserInformation($error->getRawToken())
         ;
 
         // enable compatibility with FOSUserBundle 1.3.x and 2.x
@@ -51,33 +53,26 @@ class ConnectController extends BaseConnectController
         }
 
         $formHandler = $this->container->get('hwi_oauth.registration.form.handler');
-
         if ($formHandler->process($request, $form, $userInformation)) {
-            try {
-                $this->container->get('hwi_oauth.account.connector')->connect($form->getData(), $userInformation);
-//                $route = 'fos_user_registration_confirmed';
-//                $url = $this->container->get('router')->generate($route);
-//                $response = new RedirectResponse($url);
-                // Authenticate the user
-                $this->authenticateUser($request, $form->getData(), $error->getResourceOwnerName(), $error->getRawToken());
 
-                return $this->container->get('templating')->renderResponse('HWIOAuthBundle:Connect:registration_success.html.' . $this->getTemplatingEngine(), array(
-                                                                                                                                                                 'userInformation' => $userInformation,
-                                                                                                                                                             ));
+            $this->container->get('hwi_oauth.account.connector')->connect($form->getData(), $userInformation);
 
-            } catch (\Exception $e) {
-                throw $e;
-            }
+            // Authenticate the user
+            $this->authenticateUser($request, $form->getData(), $error->getResourceOwnerName(), $error->getRawToken());
+
+            return $this->container->get('templating')->renderResponse('HWIOAuthBundle:Connect:registration_success.html.' . $this->getTemplatingEngine(), array(
+                'userInformation' => $userInformation,
+            ));
         }
 
         // reset the error in the session
         $key = time();
         $session->set('_hwi_oauth.registration_error.'.$key, $error);
 
-        return $this->container->get('templating')->renderResponse('RzOAuthBundle:Registration:register_oauth.html.twig', array(
-                                                                                                                                  'key' => $key,
-                                                                                                                                  'form' => $form->createView(),
-                                                                                                                                  'userInformation' => $userInformation,
-                                                                                                                              ));
+        return $this->container->get('templating')->renderResponse('RzOAuthBundle:Registration:register_oauth.html.twig',
+                                                                    array('key' => $key,
+                                                                          'form' => $form->createView(),
+                                                                          'userInformation' => $userInformation,
+                                                                      ));
     }
 }
