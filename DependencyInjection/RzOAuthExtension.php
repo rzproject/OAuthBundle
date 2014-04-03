@@ -32,6 +32,7 @@ class RzOAuthExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('listeners.xml');
+        $loader->load('registration.xml');
 
         #TODO:save for future implentation
         //$loader->load('registration.xml');
@@ -44,10 +45,10 @@ class RzOAuthExtension extends Extension
      *
      * @return void
      */
-    public function loadRegistrationSettings($config, ContainerBuilder $container)
-    {
-        $container->setParameter('rz_o_auth.registration.form.type', $config['form']['type']);
-        $container->setParameter('rz_o_auth.registration.form.name', $config['form']['name']);
-        $container->setParameter('rz_o_auth.registration.form.validation_groups', $config['form']['validation_groups']);
-    }
+//    public function loadRegistrationSettings($config, ContainerBuilder $container)
+//    {
+//        $container->setParameter('fos_user.registration.form.type', $config['form']['type']);
+//        $container->setParameter('fos_user.registration.form.name', $config['form']['name']);
+//        $container->setParameter('fos_user.registration.form.validation_groups', $config['form']['validation_groups']);
+//    }
 }
