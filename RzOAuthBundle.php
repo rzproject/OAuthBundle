@@ -12,7 +12,9 @@
 namespace Rz\OAuthBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class RzOAuthBundle extends Bundle
 {
 }
+

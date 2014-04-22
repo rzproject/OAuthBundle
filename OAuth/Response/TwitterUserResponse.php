@@ -15,13 +15,21 @@ use HWI\Bundle\OAuthBundle\OAuth\Response\PathUserResponse;
 
 class TwitterUserResponse extends PathUserResponse
 {
+    /**
+     * @var array
+     */
+    protected $paths = array(
+        'identifier'     => null,
+        'twitterUid'     => null,
+        'username'       => null,
+    );
 
     /**
      * {@inheritdoc}
      */
     public function getUsername()
     {
-        return $this->getValueForPath('username');
+        return $this->getValueForPath('twitterUid');
     }
 
     /**
@@ -101,12 +109,7 @@ class TwitterUserResponse extends PathUserResponse
      */
     public function getTwitterData()
     {
-        $data = $this->getValueForPath('twitterData');
-        if (!is_array($data)) {
-            $idx = $this->getPath('twitterData');
-            $data = array($idx=>$data);
-        }
-        return array_merge(array('accessToken'=>$this->getAccessToken()), $data);
+        return  json_encode($this->getJsonValueForPath('twitterData'));
     }
 
     /**
@@ -132,5 +135,62 @@ class TwitterUserResponse extends PathUserResponse
     public function getWebsite()
     {
         return $this->getValueForPath('website');
+    }
+
+    /**
+     * Extracts a value from the response for a given path.
+     *
+     * @param string $path Name of the path to get the value for
+     *
+     * @return null|string
+     */
+    protected function getJsonValueForPath($path)
+    {
+        $response = $this->response;
+        if (!$response) {
+            return null;
+        }
+
+        $steps = $this->getPath($path);
+        if (!$steps) {
+            return null;
+        }
+
+        if (is_array($steps)) {
+            if (1 === count($steps)) {
+                return $this->getValue(current($steps), $response);
+            }
+
+
+            $value = array();
+            foreach ($steps as $step) {
+                $value[$step] = $this->getValue($step, $response);
+            }
+
+            return $value ?: null;
+        }
+
+        return $this->getValue($steps, $response);
+    }
+
+    /**
+     * @param string $steps
+     * @param array  $response
+     *
+     * @return null|string
+     */
+    private function getValue($steps, array $response)
+    {
+        $value = $response;
+        $steps = explode('.', $steps);
+        foreach ($steps as $step) {
+            if (!array_key_exists($step, $value)) {
+                return null;
+            }
+
+            $value = $value[$step];
+        }
+
+        return $value;
     }
 }

@@ -21,13 +21,21 @@ class FacebookUserResponse extends PathUserResponse
      */
     public function getUsername()
     {
-        return $this->getValueForPath('username');
+        return $this->getValueForPath('facebookUid');
     }
 
     /**
      * {@inheritdoc}
      */
     public function getEmail()
+    {
+        return $this->getValueForPath('email');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getEmailCanonical()
     {
         return $this->getValueForPath('email');
     }

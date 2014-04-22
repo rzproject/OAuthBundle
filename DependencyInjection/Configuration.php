@@ -30,7 +30,8 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $node = $treeBuilder->root('rz_o_auth');
         #TODO:save for future implentation
-        //$this->addBundleSettings($node);
+        $this->addBundleSettings($node);
+        $this->addFosubConfiguration($node);
         return $treeBuilder;
     }
 
@@ -55,6 +56,44 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('profile')
+                    ->addDefaultsIfNotSet()
+                    ->canBeUnset()
+                    ->children()
+                        ->arrayNode('form')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('type')->defaultValue('rz_o_auth_user_profile')->end()
+                                ->scalarNode('handler')->defaultValue('rz_o_auth.profile.form.handler.default')->end()
+                                ->scalarNode('name')->defaultValue('rz_o_auth_user_profile_form')->end()
+                                ->arrayNode('validation_groups')
+                                    ->prototype('scalar')->end()
+                                    ->defaultValue(array('Profile', 'Default'))
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
+    }
+
+
+    private function addFosubConfiguration(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('fosub')
+                    ->children()
+                        ->scalarNode('username_iterations')->defaultValue(5)->cannotBeEmpty()->end()
+                        ->arrayNode('properties')
+                            ->isRequired()
+                            ->useAttributeAsKey('name')
+                                ->prototype('scalar')
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
     }
 }

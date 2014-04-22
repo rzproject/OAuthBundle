@@ -6,17 +6,12 @@
 
 
     <parameters>
-        <parameter key="rz_o_auth.registration.form.handler.fosub_bridge.class">Rz\OAuthBundle\Form\Handler\FOSUBRegistrationFormHandler</parameter>
+        <parameter key="rz_o_auth.user.provider.fosub_bridge.class">Rz\OAuthBundle\Security\Core\User\FOSUBUserProvider</parameter>
     </parameters>
 
     <services>
-        <service id="rz_o_auth.registration.form.handler.fosub_bridge" class="%rz_o_auth.registration.form.handler.fosub_bridge.class%">
+        <service id="rz_o_auth.user.provider.fosub_bridge.def" class="%rz_o_auth.user.provider.fosub_bridge.class%" abstract="true">
             <argument type="service" id="fos_user.user_manager" />
-            <argument type="service" id="fos_user.mailer" />
-            <argument type="service" id="fos_user.util.token_generator" on-invalid="null" />
-            <call method="setFormHandler">
-                <argument type="service" id="fos_user.registration.form.handler" on-invalid="null" />
-            </call>
         </service>
     </services>
 
