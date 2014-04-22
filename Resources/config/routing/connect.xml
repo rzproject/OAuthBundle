@@ -7,4 +7,12 @@
     <route id="rz_o_auth_registration_complete_registration" pattern="/complete/{key}">
         <default key="_controller">RzOAuthBundle:Connect:completeRegistration</default>
     </route>
+
+    <route id="hwi_oauth_connect_service" pattern="/service/{service}">
+        <default key="_controller">RzOAuthBundle:Connect:connectService</default>
+    </route>
+
+    <route id="hwi_oauth_connect_registration" pattern="/registration/{key}">
+        <default key="_controller">RzOAuthBundle:Connect:registration</default>
+    </route>
 </routes>

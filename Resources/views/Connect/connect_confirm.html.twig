@@ -1,0 +1,18 @@
+{% extends 'RzOAuthBundle::layout.html.twig' %}
+
+{% block rz_oauth_content %}
+    <div class="row">
+        <div class="span6 offset3">
+            <h1>{{ 'header.connecting' | trans({}, 'RzOAuthBundle')}}</h1>
+            <p>
+                <form action="{{ path('hwi_oauth_connect_service', {'service': service, 'key': key}) }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register">
+                    {{ form_widget(form) }}
+                    <div>
+                        <button class="btn btn-rzcms-theme" type="submit" class="btn btn-primary">{{ 'connect.confirm.submit' | trans({}, 'RzOAuthBundle') }}</button>
+                        <a class="btn btn-rzcms-theme-red"   href="{{ path('sonata_user_profile_edit') }}" class="btn">{{ 'connect.confirm.cancel' | trans({}, 'RzOAuthBundle') }}</a>
+                    </div>
+                </form>
+            </p>
+        </div>
+    </div>
+{% endblock rz_oauth_content %}

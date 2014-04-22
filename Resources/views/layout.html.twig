@@ -1,0 +1,24 @@
+<link href="{{ asset('bundles/rmzamorajquery/jquery-plugins/icheck/skins/all.css') }}" rel="stylesheet">
+<script src="{{ asset('bundles/rmzamorajquery/jquery-plugins/icheck/jquery.icheck.min.js')}}"></script>
+<div class="rz-login-frontend">
+    {% block rz_oauth_content %}
+    {% endblock rz_oauth_content %}
+</div>
+
+<script>
+    if($(".icheck-me").length > 0){
+        $(".icheck-me").each(function(){
+            var $el = $(this);
+            var skin = ($el.attr('data-skin') !== undefined) ? "_"+$el.attr('data-skin') : "",
+                    color = ($el.attr('data-color') !== undefined) ? "-"+$el.attr('data-color') : "";
+
+            var opt = {
+                checkboxClass: 'icheckbox' + skin + color,
+                radioClass: 'iradio' + skin + color,
+                increaseArea: "10%"
+            }
+
+            $el.iCheck(opt);
+        });
+    }
+</script>
