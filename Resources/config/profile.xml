@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="rz_o_auth.profile.form.handler.class">Rz\OAuthBundle\Form\Handler\ProfileFormHandler</parameter>
+    </parameters>
+
+    <services>
+
+        <service id="rz_o_auth.profile.form.handler.default" class="%rz_o_auth.profile.form.handler.class%" scope="request" public="false">
+            <argument type="service" id="rz_o_auth.profile.form" />
+            <argument type="service" id="request" />
+            <argument type="service" id="fos_user.user_manager" />
+        </service>
+
+        <service id="rz_o_auth.profile.form" factory-method="createNamed" factory-service="form.factory" class="Symfony\Component\Form\Form">
+            <argument>%rz_o_auth.profile.form.name%</argument>
+            <argument>%rz_o_auth.profile.form.type%</argument>
+            <argument>null</argument>
+            <argument type="collection">
+                <argument key="validation_groups">%rz_o_auth.profile.form.validation_groups%</argument>
+            </argument>
+        </service>
+
+        <service id="rz_o_auth.profile.form.type" class="Rz\OAuthBundle\Form\Type\ProfileFormType">
+            <tag name="form.type" alias="rz_o_auth_user_profile" />
+            <argument>%fos_user.model.user.class%</argument>
+            <argument>%rz_o_auth.profile.form.options%</argument>
+        </service>
+
+
+    </services>
+
+</container>
