@@ -3,7 +3,7 @@
 {% block action_buttons %}
     {{ parent() }}
     <p class="form_info_social">or Login Via Social Network</p>
-    <a class="btn btn-rzcms-theme btn-social btn-social-fb span12" href="{{hwi_oauth_login_url('facebook')}}"><i class="icon-facebook-sign"></i> Facebook</a>
+    <a class="btn btn-rzcms-theme btn-social btn-social-fb span12" href="{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}"><i class="icon-facebook-sign"></i> Facebook</a>
     <a class="btn btn-rzcms-theme btn-social btn-social-twitter span12" href="{{hwi_oauth_login_url('twitter')}}"><i class="icon-twitter-sign"></i> Twitter</a>
     <a class="btn btn-rzcms-theme btn-social btn-social-google span12" href="{{hwi_oauth_login_url('google')}}"><i class="icon-google-plus-sign"></i> Google+</a>
 {% endblock action_buttons %}

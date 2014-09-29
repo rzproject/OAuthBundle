@@ -149,6 +149,6 @@ class ProfileFormType extends AbstractType
 
     public function getName()
     {
-        return 'rz_o_auth_user_profile';
+        return 'rz_oauth_user_profile';
     }
 }

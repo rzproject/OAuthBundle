@@ -4,27 +4,36 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <parameters>
-        <parameter key="rz_o_auth.registration.form.handler.fosub_bridge.class">Rz\OAuthBundle\Form\Handler\FOSUBRegistrationFormHandler</parameter>
-    </parameters>
-
     <services>
 
-        <service id="rz_o_auth.registration.form.handler.fosub_bridge" class="%rz_o_auth.registration.form.handler.fosub_bridge.class%" scope="request">
+        <!-- registration form -->
+        <service id="rz.oauth.registration.form" factory-method="createNamed" factory-service="form.factory" class="Symfony\Component\Form\Form">
+            <argument>%rz.oauth.registration.form.name%</argument>
+            <argument>%rz.oauth.registration.form.type%</argument>
+            <argument>null</argument>
+            <argument type="collection">
+                <argument key="validation_groups">%rz.oauth.registration.form.validation_groups%</argument>
+            </argument>
+        </service>
+
+        <service id="rz.oauth.registration.form.type" class="Rz\OAuthBundle\Form\Type\RegistrationFormType">
+            <tag name="form.type" alias="rz_oauth_user_registration" />
+            <argument>%fos_user.model.user.class%</argument>
+            <argument>%rz.oauth.registration.form.options%</argument>
+        </service>
+
+        <service id="rz.oauth.registration.form.handler.default" class="Rz\OAuthBundle\Form\Handler\RegistrationFormHandler" scope="request" public="false">
             <argument type="service" id="fos_user.user_manager" />
             <argument type="service" id="fos_user.mailer" />
             <argument type="service" id="fos_user.util.token_generator" on-invalid="null" />
             <call method="setFormHandler">
-                <argument type="service" id="fos_user.registration.form.handler" on-invalid="null" />
+                <argument type="service" id="rz.user.registration.form.handler" on-invalid="null" />
             </call>
         </service>
 
-        <service id="rz_o_auth.registration.form.type" class="Rz\OAuthBundle\Form\Type\RegistrationFormType">
-            <tag name="form.type" alias="rz_o_auth_user_registration" />
-            <argument>%fos_user.model.user.class%</argument>
-            <argument>%sonata.user.registration.form.options%</argument>
-        </service>
-
+        <!--<service id="rz.oauth.user.provider.fosub_bridge.def" class="%rz.oauth.user.provider.fosub_bridge.class%" abstract="true">-->
+            <!--<argument type="service" id="fos_user.user_manager" />-->
+        <!--</service>-->
 
     </services>
 

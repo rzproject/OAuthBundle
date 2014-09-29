@@ -28,6 +28,14 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('firstname', 'email', array_merge(array(
+                'label' => 'form.label_firstname',
+                'translation_domain' => 'RzUserBundle',
+            ), $this->mergeOptions))
+            ->add('lastname', 'email', array_merge(array(
+                'label' => 'form.label_lastname',
+                'translation_domain' => 'RzUserBundle',
+            ), $this->mergeOptions))
             ->add('username', null, array_merge(array(
                 'label' => 'form.username',
                 'translation_domain' => 'SonataUserBundle',
@@ -101,6 +109,6 @@ class RegistrationFormType extends AbstractType
 
     public function getName()
     {
-        return 'rz_o_auth_user_registration';
+        return 'rz_oauth_user_registration';
     }
 }

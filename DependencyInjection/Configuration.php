@@ -31,7 +31,7 @@ class Configuration implements ConfigurationInterface
         $node = $treeBuilder->root('rz_o_auth');
         #TODO:save for future implentation
         $this->addBundleSettings($node);
-        $this->addFosubConfiguration($node);
+        $this->addTemplates($node);
         return $treeBuilder;
     }
 
@@ -39,15 +39,18 @@ class Configuration implements ConfigurationInterface
     {
         $node
             ->children()
+                ->scalarNode('login_listener_class')->defaultValue('Rz\\OAuthBundle\\Event\\Listener\\OAuthLoginEventListener')->end()
                 ->arrayNode('registration')
                     ->addDefaultsIfNotSet()
                     ->canBeUnset()
                     ->children()
+                        ->scalarNode('fos_user_bridge_class')->defaultValue('Rz\\OAuthBundle\\Security\\Core\\User\\FOSUBUserProvider')->end()
                         ->arrayNode('form')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->scalarNode('type')->defaultValue('rz_o_auth_user_registration')->end()
-                                ->scalarNode('name')->defaultValue('rz_o_auth_user_registration_form')->end()
+                                ->scalarNode('type')->defaultValue('rz_oauth_user_registration')->end()
+                                ->scalarNode('handler')->defaultValue('rz.oauth.registration.form.handler.default')->end()
+                                ->scalarNode('name')->defaultValue('rz_oauth_user_registration_form')->end()
                                 ->arrayNode('validation_groups')
                                     ->prototype('scalar')->end()
                                     ->defaultValue(array('Registration', 'Default'))
@@ -63,9 +66,9 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('form')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->scalarNode('type')->defaultValue('rz_o_auth_user_profile')->end()
-                                ->scalarNode('handler')->defaultValue('rz_o_auth.profile.form.handler.default')->end()
-                                ->scalarNode('name')->defaultValue('rz_o_auth_user_profile_form')->end()
+                                ->scalarNode('type')->defaultValue('rz_oauth_user_profile')->end()
+                                ->scalarNode('handler')->defaultValue('rz.oauth.profile.form.handler.default')->end()
+                                ->scalarNode('name')->defaultValue('rz_oauth_user_profile_form')->end()
                                 ->arrayNode('validation_groups')
                                     ->prototype('scalar')->end()
                                     ->defaultValue(array('Profile', 'Default'))
@@ -77,23 +80,25 @@ class Configuration implements ConfigurationInterface
             ->end();
     }
 
-
-    private function addFosubConfiguration(ArrayNodeDefinition $node)
+    /**
+     * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
+     *
+     * @return void
+     */
+    private function addTemplates(ArrayNodeDefinition $node)
     {
+        //TODO: add other templates for configuration
         $node
             ->children()
-                ->arrayNode('fosub')
-                    ->children()
-                        ->scalarNode('username_iterations')->defaultValue(5)->cannotBeEmpty()->end()
-                        ->arrayNode('properties')
-                            ->isRequired()
-                            ->useAttributeAsKey('name')
-                                ->prototype('scalar')
-                            ->end()
+                ->arrayNode('templates')
+                        ->addDefaultsIfNotSet()
+                        ->canBeUnset()
+                        ->children()
+                            ->scalarNode('layout')->defaultValue('RzOAuthBundle::layout.html.twig')->end()
+                            ->scalarNode('login')->defaultValue('RzOAuthBundle:OAuthSecurity:login.html.twig')->end()
                         ->end()
                     ->end()
                 ->end()
-            ->end()
-        ;
+            ->end();
     }
 }

@@ -13,8 +13,18 @@ namespace Rz\OAuthBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Rz\OAuthBundle\DependencyInjection\Compiler\TemplateCompilerPass;
+use Rz\OAuthBundle\DependencyInjection\Compiler\OverrideServiceCompilerPass;
 
 class RzOAuthBundle extends Bundle
 {
+    /**
+     * {@inheritDoc}
+     */
+    public function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new OverrideServiceCompilerPass());
+        $container->addCompilerPass(new TemplateCompilerPass());
+    }
 }
 

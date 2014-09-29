@@ -25,6 +25,46 @@ use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider as BaseFOSUBUser
 class FOSUBUserProvider extends BaseFOSUBUserProvider
 {
 
+    /**
+     * {@inheritDoc}
+     */
+    public function loadUserByUsername($username)
+    {
+        // Compatibility with FOSUserBundle < 2.0
+        if (class_exists('FOS\UserBundle\Form\Handler\RegistrationFormHandler')) {
+            return $this->userManager->loadUserByUsername($username);
+        }
+
+        return $this->userManager->findUserByUsername($username);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function loadUserByOAuthUserResponse(UserResponseInterface $response)
+    {
+//        $username = $response->getUsername();
+//
+//        $user = $this->userManager->findUserBy(array($this->getProperty($response) => $username));
+//        if (null === $user || null === $username) {
+//            throw new AccountNotLinkedException(sprintf("User '%s' not found.", $username));
+//        }
+//
+//        return $user;
+
+        $property       = $this->getProperty($response);
+        $getter         = 'get'.ucfirst($property);
+        $property_value = $response->$getter();
+
+        $user = $this->userManager->findUserBy(array($this->getProperty($response) => $property_value));
+
+        if (null === $user || null === $property_value) {
+            throw new AccountNotLinkedException(sprintf("User with '%s:%s' not found.", $property, $property_value));
+        }
+
+        return $user;
+    }
+
 
     /**
      * {@inheritDoc}

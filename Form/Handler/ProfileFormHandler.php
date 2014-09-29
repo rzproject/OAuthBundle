@@ -2,9 +2,15 @@
 
 namespace Rz\OAuthBundle\Form\Handler;
 
+use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\Request;
 
-use FOS\UserBundle\Form\Handler\ProfileFormHandler as BaseProfileFormHandler;
+use FOS\UserBundle\Model\UserInterface;
+use FOS\UserBundle\Model\UserManagerInterface;
 
-class ProfileFormHandler extends BaseProfileFormHandler
+use  Rz\UserBundle\Form\Handler\ProfileFormHandler as BaseClass;
+
+class ProfileFormHandler extends BaseClass
 {
+
 }

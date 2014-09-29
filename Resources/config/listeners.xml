@@ -1,14 +1,22 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <services>
-        <service id="rz_o_auth.listener.user_login" class="Rz\OAuthBundle\EventListener\UserLoginEventListener">
-            <tag name="kernel.event_subscriber" />
-            <argument type="service" id="service_container" />
-        </service>
-    </services>
+<!--<parameters>-->
+<!--<parameter key="rz.user.security.force_update_password_listener.class">Rz\UserBundle\Event\Listener\ForcePasswordUpdateListener</parameter>-->
+<!--</parameters>-->
+
+<services>
+    <service id="rz.oauth.login_listener" class="%rz.oauth.login_listener.class%">
+        <argument type="service" id="router" />
+        <argument type="service" id="security.context" />
+        <argument type="service" id="session" />
+        <argument>%hwi_oauth.connect%</argument>
+        <tag name="kernel.event_listener" event="kernel.request" method="onOAuthLogin" />
+    </service>
+</services>
 
 </container>
+
