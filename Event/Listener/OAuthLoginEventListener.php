@@ -37,14 +37,11 @@ class OAuthLoginEventListener
 
     public function onOAuthLogin(GetResponseEvent $event)
     {
-
-
         if ($this->securityContext->getToken() &&
             !$hasUser = $this->securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') &&
             $this->isHWIConnect) {
             $request =  $event->getRequest();
             $error = $this->getErrorForRequest($request);
-
             if ($error instanceof AccountNotLinkedException) {
                 $key = time();
                 $session = $request->getSession();
@@ -65,12 +62,12 @@ class OAuthLoginEventListener
      */
     protected function getErrorForRequest($request)
     {
+        //just get the error do not remove the error form the session
         $session = $request->getSession();
         if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
             $error = $request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
         } elseif (null !== $session && $session->has(SecurityContext::AUTHENTICATION_ERROR)) {
             $error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
-            $session->remove(SecurityContext::AUTHENTICATION_ERROR);
         } else {
             $error = '';
         }
