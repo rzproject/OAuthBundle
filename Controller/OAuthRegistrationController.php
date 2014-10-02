@@ -15,47 +15,6 @@ use FOS\UserBundle\Model\UserInterface;
 
 class OAuthRegistrationController extends RegistrationSonataUserController
 {
-    public function registerAction()
-    {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-
-        if ($user instanceof UserInterface) {
-            $this->container->get('session')->getFlashBag()->set('rz_user_error', 'sonata_user_already_authenticated');
-            $url = $this->container->get('router')->generate('fos_user_profile_show');
-
-            return new RedirectResponse($url);
-        }
-
-        $form = $this->container->get('rz.oauth.registration.form');
-        $formHandler = $this->container->get('rz.oauth.registration.form.handler');
-        $confirmationEnabled = $this->container->getParameter('fos_user.registration.confirmation.enabled');
-
-        $process = $formHandler->process($confirmationEnabled);
-        if ($process) {
-            $user = $form->getData();
-
-            $authUser = false;
-            if ($confirmationEnabled) {
-                $this->container->get('session')->set('fos_user_send_confirmation_email/email', $user->getEmail());
-                $route = 'fos_user_registration_check_email';
-            } else {
-                $authUser = true;
-                $route = 'fos_user_registration_confirmed';
-            }
-
-            $this->setFlash('rz_user_success', 'registration.flash.user_created');
-
-            $response = new RedirectResponse($this->container->get('router')->generate($route));
-
-            if ($authUser) {
-                $this->authenticateUser($user, $response);
-            }
-
-            return $response;
-        }
-
-        return $this->container->get('templating')->renderResponse('RzOAuthBundle:OAuthRegistration:register.html.twig', array('form' => $form->createView()));
-    }
 
     /**
      * Tell the user to check his email provider
