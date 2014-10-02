@@ -96,6 +96,7 @@ class Configuration implements ConfigurationInterface
                         ->children()
                             ->scalarNode('layout')->defaultValue('RzOAuthBundle::layout.html.twig')->end()
                             ->scalarNode('login')->defaultValue('RzOAuthBundle:OAuthSecurity:login.html.twig')->end()
+                            ->scalarNode('registration')->defaultValue('RzOAuthBundle:OAuthRegistration:register.html.twig')->end()
                         ->end()
                     ->end()
                 ->end()
