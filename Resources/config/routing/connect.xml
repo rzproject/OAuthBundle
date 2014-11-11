@@ -4,7 +4,15 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
-    <route id="rz_o_auth_registration_complete_registration" pattern="/complete/{key}">
-        <default key="_controller">RzOAuthBundle:Connect:completeRegistration</default>
+    <route id="rz_oauth_registration_complete_registration" pattern="/complete/{key}">
+        <default key="_controller">RzOAuthBundle:OAuthConnect:completeRegistration</default>
+    </route>
+
+    <route id="hwi_oauth_connect_service" pattern="/service/{service}">
+        <default key="_controller">RzOAuthBundle:OAuthConnect:connectService</default>
+    </route>
+
+    <route id="hwi_oauth_connect_registration" pattern="/registration/{key}">
+        <default key="_controller">RzOAuthBundle:OAuthConnect:registration</default>
     </route>
 </routes>

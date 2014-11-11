@@ -1,18 +1,20 @@
 <?php
 
+
+
 namespace Rz\OAuthBundle\Form\Handler;
 
 
-use HWI\Bundle\OAuthBundle\Form\FOSUBRegistrationFormHandler as BaseFOSUBRegistrationFormHandler;
+use FOS\UserBundle\Mailer\MailerInterface;
+use FOS\UserBundle\Model\UserManagerInterface;
+use FOS\UserBundle\Util\TokenGenerator;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
+use HWI\Bundle\OAuthBundle\Form\FOSUBRegistrationFormHandler as BaseHandler;
+use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * FOSUBRegistrationFormHandler
- *
- * @author Alexander <iam.asm89@gmail.com>
- */
-class FOSUBRegistrationFormHandler extends BaseFOSUBRegistrationFormHandler
+class RegistrationFormHandler extends BaseHandler
 {
     /**
      * Set user information from form

@@ -1,0 +1,50 @@
+{% trans_default_domain 'FOSUserBundle' %}
+<div class="row-fluid">
+    <div class="span6 offset3">
+        <h1>{{ "title_user_register" | trans({}, 'RzUserBundle')}}</h1>
+
+        <div class="form-errors">
+            {{ form_errors(form) }}
+        </div>
+        <form class="contact-form contact-form-register" action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" novalidate>
+            <p class="form_info">{{ 'form.label_firstname'|trans({}, 'RzUserBundle') }} <span class="required">*</span></p>
+            {{ form_widget(form.firstname, { 'attr': {'class': 'span12'} }) }}
+            <div class="form-errors">
+                {{ form_errors(form.firstname) }}
+            </div>
+            <p class="form_info">{{ 'form.label_lastname'|trans({}, 'RzUserBundle') }} <span class="required">*</span></p>
+            {{ form_widget(form.lastname, { 'attr': {'class': 'span12'} }) }}
+            <div class="form-errors">
+                {{ form_errors(form.lastname) }}
+            </div>
+            <p class="form_info">{{ 'form.label_email'|trans({}, 'RzUserBundle') }} <span class="required">*</span></p>
+            {{ form_widget(form.email, { 'attr': {'class': 'span12'} }) }}
+            <div class="form-errors">
+                {{ form_errors(form.email) }}
+            </div>
+            <p class="form_info">{{ 'form.label_username'|trans({}, 'RzUserBundle') }} <span class="required">*</span></p>
+            {{ form_widget(form.username, { 'attr': {'class': 'span12'} }) }}
+            <div class="form-errors">
+                {{ form_errors(form.username) }}
+            </div>
+            <p class="form_info">{{ 'form.label_password'|trans({}, 'RzUserBundle') }} <span class="required">*</span></p>
+            {{ form_widget(form.plainPassword.first, { 'attr': {'class': 'span12'} }) }}
+            <div class="form-errors">
+                {{ form_errors(form.plainPassword.first) }}
+            </div>
+            <p class="form_info">{{ 'form.label_password_confirmation'|trans({}, 'RzUserBundle') }} <span class="required">*</span></p>
+            {{ form_widget(form.plainPassword.second, { 'attr': {'class': 'span12'} }) }}
+            <div class="form-errors">
+                {{ form_errors(form.plainPassword.second, { 'attr': {'class': 'register-error'} }) }}
+            </div>
+            {{ form_rest(form) }}
+            <div class="registration-submit">
+                <input class="btn btn-rzcms-theme btn-register span12" type="submit" value="{{ 'registration.submit'|trans }}" />
+                <p class="form_info_social">or Register Via Social Network</p>
+                <a class="btn btn-rzcms-theme btn-social btn-social-fb span12" href="{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}"><i class="icon-facebook-sign"></i> Facebook</a>
+                <a class="btn btn-rzcms-theme btn-social btn-social-twitter span12" href="{{hwi_oauth_login_url('twitter')}}"><i class="icon-twitter-sign"></i> Twitter</a>
+                <a class="btn btn-rzcms-theme btn-social btn-social-google span12" href="{{hwi_oauth_login_url('google')}}"><i class="icon-google-plus-sign"></i> Google+</a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -34,16 +34,49 @@ class RzOAuthExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('listeners.xml');
-        $loader->load('registration.xml');
-        $loader->load('profile.xml');
-        $loader->load('services.xml');
-
         #TODO:save for future implentation
-        //$loader->load('registration.xml');
-        //$this->loadRegistrationSettings($config['registration'], $container);
+        $loader->load('profile.xml');
         $this->configureProfile($config, $container);
-        $this->configureFOSUB($config, $container);
+        $loader->load('registration.xml');
+        $this->configureRegistration($config, $container);
+        $this->configureRzTemplates($config, $container);
+        $this->configureListener($config, $container);
+        $loader->load('listeners.xml');
+
+    }
+
+
+    /**
+     * @param array            $config
+     * @param ContainerBuilder $container
+     */
+    public function configureRegistration(array $config, ContainerBuilder $container)
+    {
+        $container->setParameter('rz.oauth.registration.form.options', array());
+        $container->setParameter('rz.oauth.registration.form.type', $config['registration']['form']['type']);
+        $container->setParameter('rz.oauth.registration.form.name', $config['registration']['form']['name']);
+        $container->setParameter('rz.oauth.registration.form.validation_groups', $config['registration']['form']['validation_groups']);
+
+        $container->setAlias('rz.oauth.registration.form.handler', $config['registration']['form']['handler']);
+
+        $container->setParameter('rz.oauth.registration.form.options', array());
+
+        $container->setParameter('rz.oauth.user.provider.fosub_bridge.class', $config['registration']['fos_user_bridge_class']);
+    }
+
+    /**
+     * @param array            $config
+     * @param ContainerBuilder $container
+     */
+    public function configureProfile(array $config, ContainerBuilder $container)
+    {
+        $container->setParameter('rz.oauth.profile.form.type', $config['profile']['form']['type']);
+        $container->setParameter('rz.oauth.profile.form.name', $config['profile']['form']['name']);
+        $container->setParameter('rz.oauth.profile.form.validation_groups', $config['profile']['form']['validation_groups']);
+
+        $container->setAlias('rz.oauth.profile.form.handler', $config['profile']['form']['handler']);
+
+        $container->setParameter('rz.oauth.profile.form.options', array());
     }
 
     /**
@@ -52,35 +85,19 @@ class RzOAuthExtension extends Extension
      *
      * @return void
      */
-//    public function loadRegistrationSettings($config, ContainerBuilder $container)
-//    {
-//        $container->setParameter('fos_user.registration.form.type', $config['form']['type']);
-//        $container->setParameter('fos_user.registration.form.name', $config['form']['name']);
-//        $container->setParameter('fos_user.registration.form.validation_groups', $config['form']['validation_groups']);
-//    }
-
-    /**
-     * @param array            $config
-     * @param ContainerBuilder $container
-     */
-    public function configureProfile(array $config, ContainerBuilder $container)
+    public function configureRzTemplates($config, ContainerBuilder $container)
     {
-        $container->setParameter('rz_o_auth.profile.form.type', $config['profile']['form']['type']);
-        $container->setParameter('rz_o_auth.profile.form.name', $config['profile']['form']['name']);
-        $container->setParameter('rz_o_auth.profile.form.validation_groups', $config['profile']['form']['validation_groups']);
-        //$container->setParameter('sonata.user.configuration.profile_blocks', $config['profile']['dashboard']['blocks']);
-        $container->setAlias('rz_o_auth.profile.form.handler', $config['profile']['form']['handler']);
-        $container->setParameter('rz_o_auth.profile.form.options', array());
+        $container->setParameter('rz_oauth.templates', $config['templates']);
     }
 
-    public function configureFOSUB(array $config, ContainerBuilder $container) {
-        if (isset($config['fosub'])) {
-            $container
-                ->setDefinition('rz_o_auth.user.provider.fosub_bridge', new DefinitionDecorator('rz_o_auth.user.provider.fosub_bridge.def'))
-                ->addArgument($config['fosub']['properties'])
-            ;
-
-            $container->setAlias('hwi_oauth.account.connector', 'rz_o_auth.user.provider.fosub_bridge');
-        }
+    /**
+     * @param array                                                   $config
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     *
+     * @return void
+     */
+    public function configureListener($config, ContainerBuilder $container)
+    {
+        $container->setParameter('rz.oauth.login_listener.class', $config['login_listener_class']);
     }
 }

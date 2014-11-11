@@ -1,0 +1,6 @@
+{% extends rz_admin_get_template('rz_user.template.layout') %}
+{% block rz_user_header %}{% endblock rz_user_header %}
+
+{% block fos_user_content %}
+{% include "RzOAuthBundle:OAuthRegistration:register_content.html.twig" %}
+{% endblock fos_user_content %}
