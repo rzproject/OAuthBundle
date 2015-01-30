@@ -33,9 +33,10 @@ class OAuthProfileController extends BaseProfileController
             return new RedirectResponse($this->generateUrl('fos_user_profile_show'));
         }
 
-        return $this->render('RzOAuthBundle:OAuthProfile:edit_profile.html.twig', array(
+        $template = $this->container->get('rz_admin.template.loader')->getTemplates();
+
+        return $this->render($template['rz_oauth.template.profile_edit'], array(
             'form'               => $form->createView(),
-            'user'               => $user,
             'breadcrumb_context' => 'user_profile',
         ));
     }

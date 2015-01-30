@@ -72,7 +72,8 @@ class OAuthRegistrationController extends RegistrationSonataUserController
             throw new NotFoundHttpException(sprintf('The user with email "%s" does not exist', $email));
         }
 
-        return $this->container->get('templating')->renderResponse('RzOAuthBundle:OAuthRegistration:checkEmail.html.twig', array('user' => $user));
+        $template = $this->container->get('rz_admin.template.loader')->getTemplates();
+        return $this->container->get('templating')->renderResponse($template['rz_oauth.template.registration_check_email'], array('user' => $user));
     }
 
     /**
@@ -112,7 +113,9 @@ class OAuthRegistrationController extends RegistrationSonataUserController
             throw new AccessDeniedException('This user does not have access to this section.');
         }
 
-        return $this->container->get('templating')->renderResponse('RzOAuthBundle:Registration:confirmed.html.html', array('user' => $user));
+
+        $template = $this->container->get('rz_admin.template.loader')->getTemplates();
+        return $this->container->get('templating')->renderResponse($template['rz_oauth.template.registration_confirmed'], array('user' => $user));
     }
 
     /**
