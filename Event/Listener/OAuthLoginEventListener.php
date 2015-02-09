@@ -37,12 +37,18 @@ class OAuthLoginEventListener
 
     public function onOAuthLogin(GetResponseEvent $event)
     {
+        // make sure to act on the master request only
+        if (!$event->isMasterRequest()) {
+			return;
+		}
+		
         if ($this->securityContext->getToken() &&
             !$hasUser = $this->securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') &&
             $this->isHWIConnect) {
             $request =  $event->getRequest();
             $error = $this->getErrorForRequest($request);
-            if ($error instanceof AccountNotLinkedException) {
+            if ($error instanceof AccountNotLinkedException &&
+               $request->get('_route') != 'rz_oauth_registration_complete_registration') {
                 $key = time();
                 $session = $request->getSession();
                 $session->set('_hwi_oauth.registration_error.'.$key, $error);
