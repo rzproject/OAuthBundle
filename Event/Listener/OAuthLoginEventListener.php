@@ -74,6 +74,7 @@ class OAuthLoginEventListener
             $error = $request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
         } elseif (null !== $session && $session->has(SecurityContext::AUTHENTICATION_ERROR)) {
             $error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
+            $session->remove(SecurityContext::AUTHENTICATION_ERROR);
         } else {
             $error = '';
         }
