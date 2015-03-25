@@ -16,20 +16,25 @@ use Symfony\Component\Routing\Router;
 
 use Sonata\PageBundle\Request\SiteRequest as Request;
 use Symfony\Component\HttpFoundation\Request as BaseRequest;
-
 use Rz\UserBundle\Model\PasswordExpireConfigManagerInterface;
+
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 
 class OAuthLoginEventListener
 {
-    protected $securityContext;
+    protected $sessionChecker;
+    protected $sessionTokenStorage;
+    protected $sessionAuthUtils;
     protected $isHWIConnect;
     protected $session;
     protected $router;
 
-    public function __construct(ChainRouter $router, SecurityContext $securityContext, Session $session, $isHWIConnect =false)
+    public function __construct(ChainRouter $router, Session $session, $sessionChecker, $sessionTokenStorage, $sessionAuthUtils, $isHWIConnect =false)
     {
-        $this->securityContext = $securityContext;
+        $this->sessionChecker = $sessionChecker;
+        $this->sessionAuthUtils = $sessionAuthUtils;
+        $this->sessionTokenStorage = $sessionTokenStorage;
         $this->isHWIConnect = $isHWIConnect;
         $this->session = $session;
         $this->router = $router;
@@ -42,11 +47,11 @@ class OAuthLoginEventListener
 			return;
 		}
 		
-        if ($this->securityContext->getToken() &&
-            !$hasUser = $this->securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') &&
+        if ($this->sessionTokenStorage->getToken() &&
+            !$hasUser = $this->sessionChecker->isGranted('IS_AUTHENTICATED_REMEMBERED') &&
             $this->isHWIConnect) {
             $request =  $event->getRequest();
-            $error = $this->getErrorForRequest($request);
+            $error = $this->sessionAuthUtils->getLastAuthenticationError(false);
             if ($error instanceof AccountNotLinkedException &&
                $request->get('_route') != 'rz_oauth_registration_complete_registration') {
                 $key = time();
@@ -56,29 +61,5 @@ class OAuthLoginEventListener
                 $event->setResponse(new RedirectResponse($uri));
             }
         }
-    }
-
-
-    /**
-     * Get the security error for a given request.
-     *
-     * @param Request $request
-     *
-     * @return string|\Exception
-     */
-    protected function getErrorForRequest($request)
-    {
-        //just get the error do not remove the error form the session
-        $session = $request->getSession();
-        if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
-            $error = $request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
-        } elseif (null !== $session && $session->has(SecurityContext::AUTHENTICATION_ERROR)) {
-            $error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
-            $session->remove(SecurityContext::AUTHENTICATION_ERROR);
-        } else {
-            $error = '';
-        }
-
-        return $error;
     }
 }
