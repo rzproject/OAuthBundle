@@ -53,7 +53,10 @@ class FacebookUserResponse extends PathUserResponse
      */
     public function getDateOfBirth()
     {
-        return new \DateTime($this->getValueForPath('dateOfBirth'));
+        if (($dob = $this->getValueForPath('dateOfBirth'))) {
+            return new \DateTime($dob);
+        }
+        return null;
     }
 
     /**
