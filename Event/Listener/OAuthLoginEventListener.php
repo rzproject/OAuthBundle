@@ -53,7 +53,7 @@ class OAuthLoginEventListener
             !$hasUser = $this->sessionChecker->isGranted('IS_AUTHENTICATED_REMEMBERED') &&
             $this->isHWIConnect) {
             $request =  $event->getRequest();
-            $error = $this->sessionAuthUtils->getLastAuthenticationError(true);
+            $error = $this->sessionAuthUtils->getLastAuthenticationError(false);
             if ($error instanceof AccountNotLinkedException &&
                 $this->forceCompleteRegistration &&
                 $request->get('_route') != 'rz_oauth_registration_complete_registration') {
@@ -62,6 +62,7 @@ class OAuthLoginEventListener
                 $session->set('_hwi_oauth.registration_error.'.$key, $error);
                 $uri = $this->router->generate('rz_oauth_registration_complete_registration', array('key' => $key));
                 $event->setResponse(new RedirectResponse($uri));
+                $this->sessionAuthUtils->getLastAuthenticationError(true);
             }
         }
     }
