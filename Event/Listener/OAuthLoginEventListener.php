@@ -29,8 +29,9 @@ class OAuthLoginEventListener
     protected $isHWIConnect;
     protected $session;
     protected $router;
+    protected $forceCompleteRegistration;
 
-    public function __construct(ChainRouter $router, Session $session, $sessionChecker, $sessionTokenStorage, $sessionAuthUtils, $isHWIConnect =false)
+    public function __construct(ChainRouter $router, Session $session, $sessionChecker, $sessionTokenStorage, $sessionAuthUtils, $isHWIConnect =false, $forceCompleteRegistration=true)
     {
         $this->sessionChecker = $sessionChecker;
         $this->sessionAuthUtils = $sessionAuthUtils;
@@ -38,6 +39,7 @@ class OAuthLoginEventListener
         $this->isHWIConnect = $isHWIConnect;
         $this->session = $session;
         $this->router = $router;
+        $this->forceCompleteRegistration;
     }
 
     public function onOAuthLogin(GetResponseEvent $event)
@@ -53,7 +55,8 @@ class OAuthLoginEventListener
             $request =  $event->getRequest();
             $error = $this->sessionAuthUtils->getLastAuthenticationError(false);
             if ($error instanceof AccountNotLinkedException &&
-               $request->get('_route') != 'rz_oauth_registration_complete_registration') {
+                $this->forceCompleteRegistration &&
+                $request->get('_route') != 'rz_oauth_registration_complete_registration') {
                 $key = time();
                 $session = $request->getSession();
                 $session->set('_hwi_oauth.registration_error.'.$key, $error);

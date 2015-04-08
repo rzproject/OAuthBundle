@@ -41,6 +41,7 @@ class RzOAuthExtension extends Extension
         $this->configureRegistration($config, $container);
         $this->configureRzTemplates($config, $container);
         $this->configureListener($config, $container);
+        $this->configureSettings($config, $container);
         $loader->load('listeners.xml');
 
     }
@@ -99,5 +100,10 @@ class RzOAuthExtension extends Extension
     public function configureListener($config, ContainerBuilder $container)
     {
         $container->setParameter('rz.oauth.login_listener.class', $config['login_listener_class']);
+    }
+
+    public function configureSettings($config, ContainerBuilder $container)
+    {
+        $container->setParameter('rz.oauth.force_complete_registration', $config['force_complete_registration']);
     }
 }
