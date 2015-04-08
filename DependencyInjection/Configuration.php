@@ -40,6 +40,7 @@ class Configuration implements ConfigurationInterface
         $node
             ->children()
                 ->scalarNode('login_listener_class')->defaultValue('Rz\\OAuthBundle\\Event\\Listener\\OAuthLoginEventListener')->end()
+                ->scalarNode('force_complete_registration')->defaultValue(true)->end()
                 ->arrayNode('registration')
                     ->addDefaultsIfNotSet()
                     ->canBeUnset()
