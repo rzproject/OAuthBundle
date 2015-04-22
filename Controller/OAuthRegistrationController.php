@@ -92,7 +92,7 @@ class OAuthRegistrationController extends RegistrationSonataUserController
         $user->setLastLogin(new \DateTime());
 
         $this->container->get('fos_user.user_manager')->updateUser($user);
-        if ($redirectRoute = $this->container->getParameter('fos_user.register.confirm.redirect_route')) {
+        if ($redirectRoute = $this->container->hasParameter('fos_user.register.confirm.redirect_route') ? $this->container->getParameter('fos_user.register.confirm.redirect_route') : false ) {
             $response = new RedirectResponse($this->container->get('router')->generate($redirectRoute, $this->container->getParameter('rz.user.register.confirm.redirect_route_params')));
         } else {
             $response = new RedirectResponse($this->container->get('router')->generate('fos_user_registration_confirmed'));
