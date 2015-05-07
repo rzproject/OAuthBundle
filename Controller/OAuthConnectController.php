@@ -70,7 +70,6 @@ class OAuthConnectController extends BaseConnectController
 
     public function completeRegistrationAction(Request $request, $key)
     {
-
         $connect = $this->container->getParameter('hwi_oauth.connect');
         if (!$connect) {
             throw new NotFoundHttpException();
