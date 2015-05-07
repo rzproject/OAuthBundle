@@ -11,19 +11,17 @@
 
 namespace Rz\OAuthBundle\Security\Core\User;
 
-use FOS\UserBundle\Model\User;
-use FOS\UserBundle\Model\UserManagerInterface;
-use HWI\Bundle\OAuthBundle\Connect\AccountConnectorInterface;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\Exception\AccountNotLinkedException;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider as BaseFOSUBUserProvider;
 
 
 class FOSUBUserProvider extends BaseFOSUBUserProvider
 {
+
+    protected $completeRegistration;
+    protected $tokenGenerator;
 
     /**
      * {@inheritDoc}
@@ -43,25 +41,20 @@ class FOSUBUserProvider extends BaseFOSUBUserProvider
      */
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
-//        $username = $response->getUsername();
-//
-//        $user = $this->userManager->findUserBy(array($this->getProperty($response) => $username));
-//        if (null === $user || null === $username) {
-//            throw new AccountNotLinkedException(sprintf("User '%s' not found.", $username));
-//        }
-//
-//        return $user;
-
         $property       = $this->getProperty($response);
         $getter         = 'get'.ucfirst($property);
         $property_value = $response->$getter();
+        $params = array($this->getProperty($response) => $property_value);
 
-        $user = $this->userManager->findUserBy(array($this->getProperty($response) => $property_value));
+        $user = $this->userManager->findUserBy($params);
 
         if (null === $user || null === $property_value) {
-            throw new AccountNotLinkedException(sprintf("User with '%s:%s' not found.", $property, $property_value));
+            if(!$this->completeRegistration) {
+                $user = $this->createUser($response);
+            } else {
+                throw new AccountNotLinkedException(sprintf("User with '%s:%s' not found.", $property, $property_value));
+            }
         }
-
         return $user;
     }
 
@@ -85,8 +78,6 @@ class FOSUBUserProvider extends BaseFOSUBUserProvider
             }
         }
 
-
-
         $username = $response->getUsername();
 
         if (null !== $previousUser = $this->userManager->findUserBy(array($property => $username))) {
@@ -107,5 +98,55 @@ class FOSUBUserProvider extends BaseFOSUBUserProvider
     private function camelize($string)
     {
         return preg_replace_callback('/(^|_|\.)+(.)/', function ($match) { return ('.' === $match[1] ? '_' : '').strtoupper($match[2]); }, $string);
+    }
+
+    protected function createUser(UserResponseInterface $response) {
+
+        $user = $this->userManager->createUser();
+        $user->setPassword(substr($this->tokenGenerator->generateToken(), 0, 20));
+        $user->setEnabled(true);
+
+        foreach($response->getPaths() as $field=>$map) {
+            $func = $this->camelize($field);
+            $setter = 'set'.$func;
+            $getter = 'get'.$func;
+            if (method_exists($user, $setter)) {
+                $user->{$setter}($response->{$getter}());
+            }
+        }
+        $this->userManager->save($user);
+        return $user;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompleteRegistration()
+    {
+        return $this->completeRegistration;
+    }
+
+    /**
+     * @param mixed $completeRegistration
+     */
+    public function setCompleteRegistration($completeRegistration = true)
+    {
+        $this->completeRegistration = $completeRegistration;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTokenGenerator()
+    {
+        return $this->tokenGenerator;
+    }
+
+    /**
+     * @param mixed $tokenGenerator
+     */
+    public function setTokenGenerator($tokenGenerator)
+    {
+        $this->tokenGenerator = $tokenGenerator;
     }
 }
