@@ -4,6 +4,7 @@ namespace Rz\OAuthBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Security\Core\Validator\Constraint\UserPassword as OldUserPassword;
 use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
@@ -27,10 +28,11 @@ class ProfileFormType extends AbstractType
         $this->mergeOptions = $mergeOptions;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
-
         if (class_exists('Symfony\Component\Security\Core\Validator\Constraints\UserPassword')) {
             $constraint = new UserPassword();
         } else {
@@ -139,7 +141,20 @@ class ProfileFormType extends AbstractType
         ;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @todo Remove it when bumping requirements to SF 2.7+
+     */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $this->configureOptions($resolver);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => $this->class,

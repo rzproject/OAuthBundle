@@ -16,62 +16,54 @@ use Symfony\Component\Routing\Router;
 
 use Sonata\PageBundle\Request\SiteRequest as Request;
 use Symfony\Component\HttpFoundation\Request as BaseRequest;
-
 use Rz\UserBundle\Model\PasswordExpireConfigManagerInterface;
+
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 
 class OAuthLoginEventListener
 {
-    protected $securityContext;
+    protected $sessionChecker;
+    protected $sessionTokenStorage;
+    protected $sessionAuthUtils;
     protected $isHWIConnect;
     protected $session;
     protected $router;
+    protected $forceCompleteRegistration;
 
-    public function __construct(ChainRouter $router, SecurityContext $securityContext, Session $session, $isHWIConnect =false)
+    public function __construct(ChainRouter $router, Session $session, $sessionChecker, $sessionTokenStorage, $sessionAuthUtils, $isHWIConnect =false, $forceCompleteRegistration=true)
     {
-        $this->securityContext = $securityContext;
+        $this->sessionChecker = $sessionChecker;
+        $this->sessionAuthUtils = $sessionAuthUtils;
+        $this->sessionTokenStorage = $sessionTokenStorage;
         $this->isHWIConnect = $isHWIConnect;
         $this->session = $session;
         $this->router = $router;
+        $this->forceCompleteRegistration = $forceCompleteRegistration;
     }
 
     public function onOAuthLogin(GetResponseEvent $event)
     {
-        if ($this->securityContext->getToken() &&
-            !$hasUser = $this->securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') &&
+        // make sure to act on the master request only
+        if (!$event->isMasterRequest()) {
+			return;
+		}
+		
+        if ($this->sessionTokenStorage->getToken() &&
+            !$hasUser = $this->sessionChecker->isGranted('IS_AUTHENTICATED_REMEMBERED') &&
             $this->isHWIConnect) {
             $request =  $event->getRequest();
-            $error = $this->getErrorForRequest($request);
-            if ($error instanceof AccountNotLinkedException) {
+            $error = $this->sessionAuthUtils->getLastAuthenticationError(false);
+            if ($error instanceof AccountNotLinkedException &&
+                $this->forceCompleteRegistration &&
+                $request->get('_route') != 'rz_oauth_registration_complete_registration') {
                 $key = time();
                 $session = $request->getSession();
                 $session->set('_hwi_oauth.registration_error.'.$key, $error);
                 $uri = $this->router->generate('rz_oauth_registration_complete_registration', array('key' => $key));
                 $event->setResponse(new RedirectResponse($uri));
+                $this->sessionAuthUtils->getLastAuthenticationError(true);
             }
         }
-    }
-
-
-    /**
-     * Get the security error for a given request.
-     *
-     * @param Request $request
-     *
-     * @return string|\Exception
-     */
-    protected function getErrorForRequest($request)
-    {
-        //just get the error do not remove the error form the session
-        $session = $request->getSession();
-        if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
-            $error = $request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
-        } elseif (null !== $session && $session->has(SecurityContext::AUTHENTICATION_ERROR)) {
-            $error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
-        } else {
-            $error = '';
-        }
-
-        return $error;
     }
 }
