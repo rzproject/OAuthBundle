@@ -56,7 +56,7 @@ class OAuthRegistrationController extends RegistrationSonataUserController
         }
 
         $template = $this->container->get('rz_admin.template.loader')->getTemplates();
-        return $this->container->get('templating')->renderResponse($template['rz_oauth.template.registration'], array('form' => $form->createView()));
+        return $this->container->get('templating')->renderResponse($template['rz_oauth.template.registration'], array('form' => $form->createView(),'template' => $template));
     }
 
     /**
@@ -73,7 +73,7 @@ class OAuthRegistrationController extends RegistrationSonataUserController
         }
 
         $template = $this->container->get('rz_admin.template.loader')->getTemplates();
-        return $this->container->get('templating')->renderResponse($template['rz_oauth.template.registration_check_email'], array('user' => $user));
+        return $this->container->get('templating')->renderResponse($template['rz_oauth.template.registration_check_email'], array('user' => $user,'template' => $template));
     }
 
     /**
@@ -115,7 +115,7 @@ class OAuthRegistrationController extends RegistrationSonataUserController
 
 
         $template = $this->container->get('rz_admin.template.loader')->getTemplates();
-        return $this->container->get('templating')->renderResponse($template['rz_oauth.template.registration_confirmed'], array('user' => $user));
+        return $this->container->get('templating')->renderResponse($template['rz_oauth.template.registration_confirmed'], array('user' => $user,'template' => $template));
     }
 
     /**
