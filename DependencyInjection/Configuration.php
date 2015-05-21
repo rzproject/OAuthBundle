@@ -103,6 +103,8 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('profile_edit_authentication')->defaultValue('RzUserBundle:Profile:edit_authentication.html.twig')->end()
                             ->scalarNode('registration')->defaultValue('RzOAuthBundle:OAuthRegistration:register.html.twig')->end()
                             ->scalarNode('registration_content')->defaultValue('RzUserBundle:Registration:register_content.html.twig')->end()
+                            ->scalarNode('registration_oauth')->defaultValue('RzOAuthBundle:OAuthRegistration:register_oauth.html.twig')->end()
+                            ->scalarNode('registration_oauth_content')->defaultValue('RzUserBundle:Registration:register_oauth_content.html.twig')->end()
                             ->scalarNode('registration_check_email')->defaultValue('RzUserBundle:Registration:check_email.html.twig')->end()
                             ->scalarNode('registration_confirmed')->defaultValue('RzUserBundle:Registration:confirmed.html.twig')->end()
                             ->scalarNode('registration_email')->defaultValue('RzUserBundle:Registration:email.html.twig')->end()
