@@ -36,6 +36,7 @@ class OAuthProfileController extends BaseProfileController
         $template = $this->container->get('rz_admin.template.loader')->getTemplates();
 
         return $this->render($template['rz_oauth.template.profile_edit'], array(
+            'user'               => $user,
             'form'               => $form->createView(),
             'breadcrumb_context' => 'user_profile',
         ));

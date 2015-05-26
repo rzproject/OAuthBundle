@@ -1,102 +1,102 @@
-{# TODO: refactor to auto load js#}
-<link href="{{ asset('bundles/rmzamorabootstrap/plugins/datepicker/css/datepicker.css') }}" type="text/css" media="all" rel="stylesheet">
-<link href="{{ asset('bundles/rmzamorabootstrap/plugins/select/css/select.css') }}" type="text/css" media="all" rel="stylesheet">
-<script src="{{ asset('bundles/rmzamorabootstrap/plugins/datepicker/js/bootstrap-datepicker.js') }}" type="text/javascript"></script>
-<script src="{{ asset('bundles/rmzamorabootstrap/plugins/select/js/select.js') }}" type="text/javascript"></script>
-<script src="{{ asset('bundles/rzuser/js/rz/profile-form.js') }}" type="text/javascript"></script>
+{% extends rz_admin_get_template('rz_user.template.profile_edit') %}
 
-<div class="row-fluid">
-    <div class="span6 offset3">
-        <div class="sonata-user-edit-profile">
+{% block sonata_profile_content %}
+    {# TODO: refactor to auto load js#}
+    <link href="{{ asset('bundles/rmzamorabootstrap/plugins/datepicker/css/datepicker.css') }}" type="text/css" media="all" rel="stylesheet">
+    <link href="{{ asset('bundles/rmzamorabootstrap/plugins/select/css/select.css') }}" type="text/css" media="all" rel="stylesheet">
+    <script src="{{ asset('bundles/rmzamorabootstrap/plugins/datepicker/js/bootstrap-datepicker.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/rmzamorabootstrap/plugins/select/js/select.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/rzuser/js/rz/profile-form.js') }}" type="text/javascript"></script>
 
-            <h1>{{ "title_user_account" | trans({}, 'RzUserBundle')}}</h1>
-            <h2 class="small">{{ "title_user_edit_profile" | trans({}, 'RzUserBundle')}}</h2>
+    <div class="row-fluid">
+        <div class="span6 offset3">
+            <div class="sonata-user-edit-profile">
+                <form action="{{ path('fos_user_profile_edit') }}" method="POST" class="contact-form contact-form-profile">
+                    {{ form_errors(form) }}
 
-            <form action="{{ path('fos_user_profile_edit') }}" method="POST" class="contact-form contact-form-profile">
-                {{ form_errors(form) }}
+                    <p class="form_info">{{ 'form.label_email'|trans({}, 'RzUserBundle') }}</p>
+                    {{ form_widget(form.email) }}
+                    <div class="form-errors">
+                        {{ form_errors(form.email) }}
+                    </div>
 
-                <p class="form_info">{{ 'form.label_email'|trans({}, 'RzUserBundle') }}</p>
-                {{ form_widget(form.email) }}
-                <div class="form-errors">
-                    {{ form_errors(form.email) }}
-                </div>
+                    <p class="form_info">{{ 'form.label_firstname'|trans({}, 'RzUserBundle') }} <span class="required">*</span></p>
+                    {{ form_widget(form.firstname) }}
+                    <div class="form-errors">
+                        {{ form_errors(form.firstname) }}
+                    </div>
 
-                <p class="form_info">{{ 'form.label_firstname'|trans({}, 'RzUserBundle') }} <span class="required">*</span></p>
-                {{ form_widget(form.firstname) }}
-                <div class="form-errors">
-                    {{ form_errors(form.firstname) }}
-                </div>
+                    <p class="form_info">{{ 'form.label_lastname'|trans({}, 'RzUserBundle') }} <span class="required">*</span></p>
+                    {{ form_widget(form.lastname) }}
+                    <div class="form-errors">
+                        {{ form_errors(form.lastname) }}
+                    </div>
 
-                <p class="form_info">{{ 'form.label_lastname'|trans({}, 'RzUserBundle') }} <span class="required">*</span></p>
-                {{ form_widget(form.lastname) }}
-                <div class="form-errors">
-                    {{ form_errors(form.lastname) }}
-                </div>
+                    <p class="form_info">{{ 'form.label_website'|trans({}, 'RzUserBundle') }}</p>
+                    {{ form_widget(form.website) }}
+                    <div class="form-errors">
+                        {{ form_errors(form.website) }}
+                    </div>
 
-                <p class="form_info">{{ 'form.label_website'|trans({}, 'RzUserBundle') }}</p>
-                {{ form_widget(form.website) }}
-                <div class="form-errors">
-                    {{ form_errors(form.website) }}
-                </div>
+                    <p class="form_info">{{ 'form.label_phone'|trans({}, 'RzUserBundle') }}</p>
+                    {{ form_widget(form.phone) }}
+                    <div class="form-errors">
+                        {{ form_errors(form.phone) }}
+                    </div>
 
-                <p class="form_info">{{ 'form.label_phone'|trans({}, 'RzUserBundle') }}</p>
-                {{ form_widget(form.phone) }}
-                <div class="form-errors">
-                    {{ form_errors(form.phone) }}
-                </div>
+                    <p class="form_info">{{ 'form.label_gender'|trans({}, 'RzUserBundle') }}</p>
+                    {{ form_widget(form.gender) }}
+                    <div class="form-errors">
+                        {{ form_errors(form.gender) }}
+                    </div>
 
-                <p class="form_info">{{ 'form.label_gender'|trans({}, 'RzUserBundle') }}</p>
-                {{ form_widget(form.gender) }}
-                <div class="form-errors">
-                    {{ form_errors(form.gender) }}
-                </div>
+                    <p class="form_info">{{ 'form.label_dateOfBirth'|trans({}, 'RzUserBundle') }}</p>
+                    {{ form_widget(form.dateOfBirth) }}
+                    <div class="form-errors">
+                        {{ form_errors(form.dateOfBirth) }}
+                    </div>
 
-                <p class="form_info">{{ 'form.label_dateOfBirth'|trans({}, 'RzUserBundle') }}</p>
-                {{ form_widget(form.dateOfBirth) }}
-                <div class="form-errors">
-                    {{ form_errors(form.dateOfBirth) }}
-                </div>
+                    <p class="form_info">{{ 'form.label_username'|trans({}, 'RzUserBundle') }} <span class="required">*</span></p>
+                    {{ form_widget(form.username) }}
 
-                <p class="form_info">{{ 'form.label_username'|trans({}, 'RzUserBundle') }} <span class="required">*</span></p>
-                {{ form_widget(form.username) }}
+                    <p class="form_info">{{ 'form.label_current_password'|trans({}, 'RzUserBundle') }} <span class="required">*</span></p>
+                    {{ form_widget(form.current_password) }}
+                    <div class="form-errors">
+                        {{ form_errors(form.current_password) }}
+                    </div>
 
-                <p class="form_info">{{ 'form.label_current_password'|trans({}, 'RzUserBundle') }} <span class="required">*</span></p>
-                {{ form_widget(form.current_password) }}
-                <div class="form-errors">
-                    {{ form_errors(form.current_password) }}
-                </div>
+                    {% if user.facebookUid %}
+                        <p class="small">You've connected your Facebook account to this application.</p>
+                        <p><a class="btn btn-rzcms-theme btn-social btn-social-fb" type="button" href="#"><i class="icon-facebook-sign"></i> Disconnect Facebook</a></p>
+                    {% else %}
+                        <p class="small">You can connect your Facebook profile to this application. Doing this you can notify your Facebook friends about things you do with this application</p>
+                        <p><a class="btn btn-rzcms-theme btn-social btn-social-fb" type="button" href="{{ path('hwi_oauth_service_redirect', {'service':'facebook'}) }}"><i class="icon-facebook-sign"></i> Connect Facebook</a></p>
+                    {% endif %}
 
-                {% if user.facebookUid %}
-                    <p class="small">You've connected your Facebook account to this application.</p>
-                    <p><a class="btn btn-rzcms-theme btn-social btn-social-fb" type="button" href="#"><i class="icon-facebook-sign"></i> Disconnect Facebook</a></p>
-                {% else %}
-                    <p class="small">You can connect your Facebook profile to this application. Doing this you can notify your Facebook friends about things you do with this application</p>
-                    <p><a class="btn btn-rzcms-theme btn-social btn-social-fb" type="button" href="{{ path('hwi_oauth_service_redirect', {'service':'facebook'}) }}"><i class="icon-facebook-sign"></i> Connect Facebook</a></p>
-                {% endif %}
+                    {% if user.twitterUid %}
+                        <p class="small">You've connected your Twitter account to this application.</p>
+                        <p><a class="btn btn-rzcms-theme btn-social btn-social-twitter" type="button" href="#"><i class="icon-twitter-sign"></i> Disconnect Twitter</a></p>
+                    {% else %}
+                        <p class="small">You can connect your Twitter profile to this application. Doing this you can notify your Twitter friends about things you do with this application</p>
+                        <p><a class="btn btn-rzcms-theme btn-social btn-social-twitter" type="button" href="{{ path('hwi_oauth_service_redirect', {'service':'twitter'}) }}"><i class="icon-twitter-sign"></i> Connect Twitter</a></p>
+                    {% endif %}
 
-                {% if user.twitterUid %}
-                    <p class="small">You've connected your Twitter account to this application.</p>
-                    <p><a class="btn btn-rzcms-theme btn-social btn-social-twitter" type="button" href="#"><i class="icon-twitter-sign"></i> Disconnect Twitter</a></p>
-                {% else %}
-                    <p class="small">You can connect your Twitter profile to this application. Doing this you can notify your Twitter friends about things you do with this application</p>
-                    <p><a class="btn btn-rzcms-theme btn-social btn-social-twitter" type="button" href="{{ path('hwi_oauth_service_redirect', {'service':'twitter'}) }}"><i class="icon-twitter-sign"></i> Connect Twitter</a></p>
-                {% endif %}
+                    {% if user.gplusUid %}
+                        <p class="small">You've connected your GPlus account to this application.</p>
+                        <p><a class="btn btn-rzcms-theme btn-social btn-social-google" type="button" href="#"><i class="icon-google-plus-sign"></i> Disconnect Google+</a></p>
+                    {% else %}
+                        <p class="small">You can connect your GPlus profile to this application. Doing this you can notify your Gplus friends about things you do with this application</p>
+                        <p><a class="btn btn-rzcms-theme btn-social btn-social-google" type="button" href="{{ path('hwi_oauth_service_redirect', {'service':'google'}) }}"><i class="icon-google-plus-sign"></i> Connect Google+</a></p>
+                    {% endif %}
 
-                {% if user.gplusUid %}
-                    <p class="small">You've connected your GPlus account to this application.</p>
-                    <p><a class="btn btn-rzcms-theme btn-social btn-social-google" type="button" href="#"><i class="icon-google-plus-sign"></i> Disconnect Google+</a></p>
-                {% else %}
-                    <p class="small">You can connect your GPlus profile to this application. Doing this you can notify your Gplus friends about things you do with this application</p>
-                    <p><a class="btn btn-rzcms-theme btn-social btn-social-google" type="button" href="{{ path('hwi_oauth_service_redirect', {'service':'google'}) }}"><i class="icon-google-plus-sign"></i> Connect Google+</a></p>
-                {% endif %}
+                    {{ form_rest(form) }}
 
-                {{ form_rest(form) }}
-
-                <div class="profile-submit">
-                    <input class="btn btn-rzcms-themes"type="submit" name="submit" value="{{ 'profile.edit.submit'|trans({}, 'RzUserBundle') }}" />
-                    <a class="btn btn-rzcms-theme-red" type="button" href="{{ path('fos_user_profile_show') }}"/>{{ 'profile.edit.cancel' | trans({}, 'RzUserBundle') }}</a>
-                </div>
-            </form>
+                    <div class="profile-submit">
+                        <input class="btn btn-rzcms-themes"type="submit" name="submit" value="{{ 'profile.edit.submit'|trans({}, 'RzUserBundle') }}" />
+                        <a class="btn btn-rzcms-theme-red" type="button" href="{{ path('fos_user_profile_show') }}"/>{{ 'profile.edit.cancel' | trans({}, 'RzUserBundle') }}</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+{% endblock sonata_profile_content %}

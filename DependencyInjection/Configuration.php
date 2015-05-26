@@ -99,7 +99,7 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('login')->defaultValue('RzOAuthBundle:OAuthSecurity:login.html.twig')->end()
                             ->scalarNode('profile')->defaultValue('RzUserBundle:Profile:show.html.twig')->end()
                             ->scalarNode('profile_action')->defaultValue('RzUserBundle:Profile:action.html.twig')->end()
-                            ->scalarNode('profile_edit')->defaultValue('RzUserBundle:Profile:edit_profile.html.twig')->end()
+                            ->scalarNode('profile_edit')->defaultValue('RzOAuthBundle:OAuthProfile:edit_profile.html.twig')->end()
                             ->scalarNode('profile_edit_authentication')->defaultValue('RzUserBundle:Profile:edit_authentication.html.twig')->end()
                             ->scalarNode('registration')->defaultValue('RzOAuthBundle:OAuthRegistration:register.html.twig')->end()
                             ->scalarNode('registration_content')->defaultValue('RzUserBundle:Registration:register_content.html.twig')->end()
