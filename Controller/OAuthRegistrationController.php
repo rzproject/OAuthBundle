@@ -5,13 +5,14 @@
 namespace Rz\OAuthBundle\Controller;
 
 use Rz\UserBundle\Controller\RegistrationSonataUserController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
 use FOS\UserBundle\Model\UserInterface;
+use Rz\UserBundle\RzUserEvents;
+use Rz\UserBundle\Event\RzUserEvent;
 
 class OAuthRegistrationController extends RegistrationSonataUserController
 {
@@ -49,7 +50,13 @@ class OAuthRegistrationController extends RegistrationSonataUserController
             $response = new RedirectResponse($this->container->get('router')->generate($route));
 
             if ($authUser) {
+
+                $dispatcher = $this->container->get('event_dispatcher');
+                $event = new RzUserEvent();
+                $event->setUser($user);
+                $dispatcher->dispatch(RzUserEvents::BEFORE_REGISTRATION_AUTH, $event);
                 $this->authenticateUser($user, $response);
+                $dispatcher->dispatch(RzUserEvents::AFTER_REGISTRATION_AUTH, $event);
             }
 
             return $response;
