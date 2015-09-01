@@ -14,7 +14,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "rz/user-bundle": "2.1.0.*",
+        "rz/user-bundle": "2.0.0.*",
         "rmzamora/hwi-oauth-bundle": "~0.4"
     },
     "autoload": {
@@ -22,7 +22,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.1.0.x-dev"
+            "dev-2.0.0": "2.0.0.x-dev"
         }
     }
 }
