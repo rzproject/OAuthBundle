@@ -70,7 +70,6 @@ class OAuthConnectController extends BaseConnectController
 
     public function completeRegistrationAction(Request $request, $key)
     {
-
         $connect = $this->container->getParameter('hwi_oauth.connect');
         if (!$connect) {
             throw new NotFoundHttpException();
@@ -118,11 +117,12 @@ class OAuthConnectController extends BaseConnectController
         // reset the error in the session
         $key = time();
         $session->set('_hwi_oauth.registration_error.'.$key, $error);
-
-        return $this->container->get('templating')->renderResponse('RzOAuthBundle:OAuthRegistration:register_oauth.html.twig',
+        $template = $this->container->get('rz_admin.template.loader')->getTemplates();
+        return $this->container->get('templating')->renderResponse($template['rz_oauth.template.registration_oauth'],
                                                                     array('key' => $key,
                                                                           'form' => $form->createView(),
                                                                           'userInformation' => $userInformation,
+                                                                          'template' => $template
                                                                       ));
     }
 

@@ -96,7 +96,19 @@ class FacebookUserResponse extends PathUserResponse
      */
     public function getGender()
     {
-        return $this->getValueForPath('gender');
+		$gender = $this->getValueForPath('gender');
+		
+		if (interface_exists('Sonata\UserBundle\Model\UserInterface')) {
+			if ($gender == 'male') {
+				return \Sonata\UserBundle\Model\UserInterface::GENDER_MALE;
+			} elseif ($gender == 'female') {
+				return \Sonata\UserBundle\Model\UserInterface::GENDER_FEMALE;
+			} else {
+				return \Sonata\UserBundle\Model\UserInterface::GENDER_UNKNOWN;
+			}
+		}
+
+        return $gender;
     }
 
     /**

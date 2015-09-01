@@ -5,13 +5,14 @@
 namespace Rz\OAuthBundle\Controller;
 
 use Rz\UserBundle\Controller\RegistrationSonataUserController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
 use FOS\UserBundle\Model\UserInterface;
+use Rz\UserBundle\RzUserEvents;
+use Rz\UserBundle\Event\RzUserEvent;
 
 class OAuthRegistrationController extends RegistrationSonataUserController
 {
@@ -49,14 +50,20 @@ class OAuthRegistrationController extends RegistrationSonataUserController
             $response = new RedirectResponse($this->container->get('router')->generate($route));
 
             if ($authUser) {
+
+                $dispatcher = $this->container->get('event_dispatcher');
+                $event = new RzUserEvent();
+                $event->setUser($user);
+                $dispatcher->dispatch(RzUserEvents::BEFORE_REGISTRATION_AUTH, $event);
                 $this->authenticateUser($user, $response);
+                $dispatcher->dispatch(RzUserEvents::AFTER_REGISTRATION_AUTH, $event);
             }
 
             return $response;
         }
 
         $template = $this->container->get('rz_admin.template.loader')->getTemplates();
-        return $this->container->get('templating')->renderResponse($template['rz_oauth.template.registration'], array('form' => $form->createView()));
+        return $this->container->get('templating')->renderResponse($template['rz_oauth.template.registration'], array('form' => $form->createView(),'template' => $template));
     }
 
     /**
@@ -73,7 +80,7 @@ class OAuthRegistrationController extends RegistrationSonataUserController
         }
 
         $template = $this->container->get('rz_admin.template.loader')->getTemplates();
-        return $this->container->get('templating')->renderResponse($template['rz_oauth.template.registration_check_email'], array('user' => $user));
+        return $this->container->get('templating')->renderResponse($template['rz_oauth.template.registration_check_email'], array('user' => $user,'template' => $template));
     }
 
     /**
@@ -92,8 +99,8 @@ class OAuthRegistrationController extends RegistrationSonataUserController
         $user->setLastLogin(new \DateTime());
 
         $this->container->get('fos_user.user_manager')->updateUser($user);
-        if ($redirectRoute = $this->container->getParameter('fos_user.register.confirm.redirect_route')) {
-            $response = new RedirectResponse($this->container->get('router')->generate($redirectRoute, $this->container->getParameter('rz.user.register.confirm.redirect_route_params')));
+        if ($redirectRoute = $this->container->getParameter('sonata.user.register.confirm.redirect_route')) {
+            $response = new RedirectResponse($this->container->get('router')->generate($redirectRoute, $this->container->getParameter('sonata.user.register.confirm.redirect_route_params')));
         } else {
             $response = new RedirectResponse($this->container->get('router')->generate('fos_user_registration_confirmed'));
         }
@@ -115,7 +122,7 @@ class OAuthRegistrationController extends RegistrationSonataUserController
 
 
         $template = $this->container->get('rz_admin.template.loader')->getTemplates();
-        return $this->container->get('templating')->renderResponse($template['rz_oauth.template.registration_confirmed'], array('user' => $user));
+        return $this->container->get('templating')->renderResponse($template['rz_oauth.template.registration_confirmed'], array('user' => $user,'template' => $template));
     }
 
     /**
